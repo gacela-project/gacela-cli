@@ -46,7 +46,7 @@ final class CommandArgumentsParser implements CommandArgumentsParserInterface
             }
         }
 
-        throw CommandArgumentsException::noAutoloadPsr4MatchFound($desiredNamespace);
+        throw CommandArgumentsException::noAutoloadPsr4MatchFound($desiredNamespace, array_keys($psr4));
     }
 
     /**

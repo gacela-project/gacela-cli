@@ -18,8 +18,19 @@ final class CommandArgumentsException extends RuntimeException
         return new self('No autoload psr-4 match found in your composer.json');
     }
 
-    public static function noAutoloadPsr4MatchFound(string $desiredNamespace): self
+    /**
+     * @param list<string> $knownPsr4
+     */
+    public static function noAutoloadPsr4MatchFound(string $desiredNamespace, array $knownPsr4 = []): self
     {
-        return new self('No autoload psr-4 match found for ' . $desiredNamespace);
+        $parsedKnownPsr4 = array_map(static fn (string $p) => str_replace('\\', '', $p), $knownPsr4);
+
+        return new self(
+            sprintf(
+                'No autoload psr-4 match found for %s. Known PSR-4: %s',
+                $desiredNamespace,
+                implode(', ', $parsedKnownPsr4)
+            )
+        );
     }
 }
