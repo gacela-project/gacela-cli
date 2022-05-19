@@ -11,7 +11,6 @@ use Gacela\CodeGenerator\Domain\FileContent\FileContentGeneratorInterface;
 use Gacela\CodeGenerator\Domain\FileContent\FileContentIoInterface;
 use Gacela\CodeGenerator\Domain\FilenameSanitizer\FilenameSanitizer;
 use Gacela\CodeGenerator\Domain\FilenameSanitizer\FilenameSanitizerInterface;
-use Gacela\CodeGenerator\Infrastructure\Command\MakeModuleCommand;
 use Gacela\CodeGenerator\Infrastructure\FileContentIo;
 use Gacela\Framework\AbstractFactory;
 
@@ -20,19 +19,6 @@ use Gacela\Framework\AbstractFactory;
  */
 final class CodeGeneratorFactory extends AbstractFactory
 {
-    /**
-     * @deprecated
-     * TODO: Refactor MakeModuleCommand to make it instantiable without dependencies
-     */
-    public function createMakerModuleCommand(): MakeModuleCommand
-    {
-        return new MakeModuleCommand(
-            $this->createCommandArgumentsParser(),
-            $this->createFileContentGenerator(),
-            $this->createFilenameSanitizer()
-        );
-    }
-
     public function createCommandArgumentsParser(): CommandArgumentsParserInterface
     {
         return new CommandArgumentsParser(

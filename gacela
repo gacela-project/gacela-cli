@@ -5,6 +5,7 @@ declare(strict_types=1);
 
 use Gacela\CodeGenerator\CodeGeneratorFacade;
 use Gacela\CodeGenerator\Infrastructure\Command\MakeFileCommand;
+use Gacela\CodeGenerator\Infrastructure\Command\MakeModuleCommand;
 use Gacela\Framework\Gacela;
 use Symfony\Component\Console\Application;
 
@@ -21,6 +22,6 @@ $codeGeneratorFacade = new CodeGeneratorFacade();
 
 $application = new Application();
 $application->add(new MakeFileCommand());
-$application->add($codeGeneratorFacade->getMakerModuleCommand());
+$application->add(new MakeModuleCommand());
 $application->run();
 

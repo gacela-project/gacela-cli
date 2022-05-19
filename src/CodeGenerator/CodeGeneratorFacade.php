@@ -5,7 +5,6 @@ declare(strict_types=1);
 namespace Gacela\CodeGenerator;
 
 use Gacela\CodeGenerator\Domain\CommandArguments\CommandArguments;
-use Gacela\CodeGenerator\Infrastructure\Command\MakeModuleCommand;
 use Gacela\Framework\AbstractFacade;
 
 /**
@@ -13,15 +12,6 @@ use Gacela\Framework\AbstractFacade;
  */
 final class CodeGeneratorFacade extends AbstractFacade
 {
-    /**
-     * @deprecated
-     * TODO: Refactor MakeModuleCommand to make it instantiable without dependencies
-     */
-    public function getMakerModuleCommand(): MakeModuleCommand
-    {
-        return $this->getFactory()->createMakerModuleCommand();
-    }
-
     public function sanitizeFilename(string $filename): string
     {
         return $this->getFactory()
