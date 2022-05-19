@@ -1,0 +1,88 @@
+{
+    "name": "gacela-project/gacela-cli",
+    "homepage": "https://gacela-project.com/",
+    "type": "project",
+    "description": "Gacela Framework Cli",
+    "keywords": [
+        "php",
+        "modular",
+        "kernel"
+    ],
+    "license": "MIT",
+    "authors": [
+        {
+            "name": "Jose Maria Valera Reales",
+            "email": "chemaclass@outlook.es"
+        },
+        {
+            "name": "Jesus Valera Reales",
+            "email": "jesus1902@outlook.com"
+        }
+    ],
+    "require": {
+        "php": ">=7.4",
+        "ext-json": "*",
+        "symfony/console": "^5.4",
+        "gacela-project/gacela": "^0.18"
+    },
+    "require-dev": {
+        "roave/security-advisories": "dev-latest",
+        "phpunit/phpunit": "^9.5",
+        "vimeo/psalm": "^4.22",
+        "phpstan/phpstan": "^1.5",
+        "friendsofphp/php-cs-fixer": "^3.8",
+        "symfony/var-dumper": "^5.4"
+    },
+    "autoload": {
+        "psr-4": {
+            "Gacela\\": "src/"
+        }
+    },
+    "autoload-dev": {
+        "psr-4": {
+            "GacelaTest\\": "tests"
+        }
+    },
+    "bin": [
+        "gacela"
+    ],
+    "config": {
+        "platform": {
+            "php": "7.4"
+        },
+        "allow-plugins": {
+            "composer/package-versions-deprecated": true
+        }
+    },
+    "scripts": {
+        "ctal": [
+            "@csfix",
+            "@test-all"
+        ],
+        "test-all": [
+            "@quality",
+            "@phpunit"
+        ],
+        "quality": [
+            "@csrun",
+            "@psalm",
+            "@phpstan"
+        ],
+        "phpunit": [
+            "@test-unit",
+            "@test-feature"
+        ],
+        "static-clear-cache": [
+            "vendor/bin/psalm --clear-cache",
+            "vendor/bin/phpstan clear-result-cache"
+        ],
+        "test-unit": "./vendor/bin/phpunit --testsuite=unit",
+        "test-feature": "./vendor/bin/phpunit --testsuite=feature",
+        "test-all-suites": "./vendor/bin/phpunit --testsuite=unit,integration,feature --log-junit=data/log-junit.xml",
+        "test-coverage": "XDEBUG_MODE=coverage ./vendor/bin/phpunit --testsuite=unit,integration,feature --coverage-html=data/coverage-html --coverage-xml=data/coverage-xml --log-junit=data/coverage-xml/junit.xml",
+        "psalm": "./vendor/bin/psalm",
+        "phpstan": "./vendor/bin/phpstan analyze",
+        "csfix": "./vendor/bin/php-cs-fixer fix",
+        "csrun": "./vendor/bin/php-cs-fixer fix --dry-run"
+    }
+}
