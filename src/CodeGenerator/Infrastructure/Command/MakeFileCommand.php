@@ -4,35 +4,26 @@ declare(strict_types=1);
 
 namespace Gacela\CodeGenerator\Infrastructure\Command;
 
-use Gacela\CodeGenerator\Domain\CommandArguments\CommandArgumentsParserInterface;
-use Gacela\CodeGenerator\Domain\FileContent\FileContentGeneratorInterface;
-use Gacela\CodeGenerator\Domain\FilenameSanitizer\FilenameSanitizerInterface;
+use Gacela\CodeGenerator\CodeGeneratorFacade;
+use Gacela\CodeGenerator\Domain\FilenameSanitizer\FilenameSanitizer;
+use Gacela\Framework\DocBlockResolverAwareTrait;
 use Symfony\Component\Console\Command\Command;
 use Symfony\Component\Console\Input\InputArgument;
 use Symfony\Component\Console\Input\InputInterface;
 use Symfony\Component\Console\Input\InputOption;
 use Symfony\Component\Console\Output\OutputInterface;
 
+/**
+ * @method CodeGeneratorFacade getFacade()
+ */
 final class MakeFileCommand extends Command
 {
-    private CommandArgumentsParserInterface $argumentsParser;
-    private FileContentGeneratorInterface $fileContentGenerator;
-    private FilenameSanitizerInterface $filenameSanitizer;
-
-    public function __construct(
-        CommandArgumentsParserInterface $argumentsParser,
-        FileContentGeneratorInterface $fileContentGenerator,
-        FilenameSanitizerInterface $filenameSanitizer
-    ) {
-        $this->argumentsParser = $argumentsParser;
-        $this->fileContentGenerator = $fileContentGenerator;
-        $this->filenameSanitizer = $filenameSanitizer;
-        parent::__construct('make:file');
-    }
+    use DocBlockResolverAwareTrait;
 
     protected function configure(): void
     {
-        $this->setDescription('Generate a ' . $this->getExpectedFilenames())
+        $this->setName('make:file')
+            ->setDescription('Generate a ' . $this->getExpectedFilenames())
             ->addArgument('path', InputArgument::REQUIRED, 'The file path. For example "App/TestModule/TestSubModule"')
             ->addArgument('filenames', InputArgument::REQUIRED | InputArgument::IS_ARRAY, $this->getExpectedFilenames())
             ->addOption('short-name', 's', InputOption::VALUE_NONE, 'Remove module prefix to the class name');
@@ -40,20 +31,21 @@ final class MakeFileCommand extends Command
 
     protected function execute(InputInterface $input, OutputInterface $output): int
     {
-        /** @var array $inputFileNames */
+        /** @var list<string> $inputFileNames */
         $inputFileNames = $input->getArgument('filenames');
+
         $filenames = array_map(
-            fn (string $raw): string => $this->filenameSanitizer->sanitize($raw),
+            fn (string $raw): string => $this->getFacade()->sanitizeFilename($raw),
             $inputFileNames
         );
 
         /** @var string $path */
         $path = $input->getArgument('path');
-        $commandArguments = $this->argumentsParser->parse($path);
+        $commandArguments = $this->getFacade()->parseArguments($path);
         $shortName = (bool)$input->getOption('short-name');
 
         foreach ($filenames as $filename) {
-            $absolutePath = $this->fileContentGenerator->generate(
+            $absolutePath = $this->getFacade()->generateFileContent(
                 $commandArguments,
                 $filename,
                 $shortName
@@ -64,8 +56,8 @@ final class MakeFileCommand extends Command
         return self::SUCCESS;
     }
 
-    private function getExpectedFilenames(string $glue = ', '): string
+    private function getExpectedFilenames(): string
     {
-        return implode($glue, $this->filenameSanitizer->getExpectedFilenames());
+        return implode(', ', FilenameSanitizer::EXPECTED_FILENAMES);
     }
 }

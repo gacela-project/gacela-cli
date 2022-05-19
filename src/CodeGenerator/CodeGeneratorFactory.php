@@ -11,7 +11,6 @@ use Gacela\CodeGenerator\Domain\FileContent\FileContentGeneratorInterface;
 use Gacela\CodeGenerator\Domain\FileContent\FileContentIoInterface;
 use Gacela\CodeGenerator\Domain\FilenameSanitizer\FilenameSanitizer;
 use Gacela\CodeGenerator\Domain\FilenameSanitizer\FilenameSanitizerInterface;
-use Gacela\CodeGenerator\Infrastructure\Command\MakeFileCommand;
 use Gacela\CodeGenerator\Infrastructure\Command\MakeModuleCommand;
 use Gacela\CodeGenerator\Infrastructure\FileContentIo;
 use Gacela\Framework\AbstractFactory;
@@ -21,6 +20,10 @@ use Gacela\Framework\AbstractFactory;
  */
 final class CodeGeneratorFactory extends AbstractFactory
 {
+    /**
+     * @deprecated
+     * TODO: Refactor MakeModuleCommand to make it instantiable without dependencies
+     */
     public function createMakerModuleCommand(): MakeModuleCommand
     {
         return new MakeModuleCommand(
@@ -30,28 +33,19 @@ final class CodeGeneratorFactory extends AbstractFactory
         );
     }
 
-    public function createMakerFileCommand(): MakeFileCommand
-    {
-        return new MakeFileCommand(
-            $this->createCommandArgumentsParser(),
-            $this->createFileContentGenerator(),
-            $this->createFilenameSanitizer()
-        );
-    }
-
-    private function createCommandArgumentsParser(): CommandArgumentsParserInterface
+    public function createCommandArgumentsParser(): CommandArgumentsParserInterface
     {
         return new CommandArgumentsParser(
             $this->getConfig()->getComposerJsonContentAsArray()
         );
     }
 
-    private function createFilenameSanitizer(): FilenameSanitizerInterface
+    public function createFilenameSanitizer(): FilenameSanitizerInterface
     {
         return new FilenameSanitizer();
     }
 
-    private function createFileContentGenerator(): FileContentGeneratorInterface
+    public function createFileContentGenerator(): FileContentGeneratorInterface
     {
         return new FileContentGenerator(
             $this->createFileContentIo(),
