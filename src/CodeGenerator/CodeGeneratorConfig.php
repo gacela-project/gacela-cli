@@ -5,7 +5,6 @@ declare(strict_types=1);
 namespace Gacela\CodeGenerator;
 
 use Gacela\Framework\AbstractConfig;
-use Gacela\Framework\Config;
 use JsonException;
 use LogicException;
 
@@ -38,7 +37,7 @@ final class CodeGeneratorConfig extends AbstractConfig
      */
     public function getComposerJsonContentAsArray(): array
     {
-        $filename = Config::getInstance()->getAppRootDir() . '/composer.json';
+        $filename = $this->getAppRootDir() . '/composer.json';
         if (!file_exists($filename)) {
             throw new LogicException('composer.json file not found but it is required');
         }
