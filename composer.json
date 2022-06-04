@@ -23,13 +23,13 @@
         "php": ">=7.4",
         "ext-json": "*",
         "symfony/console": "^5.4",
-        "gacela-project/gacela": "^0.19"
+        "gacela-project/gacela": "dev-master"
     },
     "require-dev": {
         "roave/security-advisories": "dev-latest",
         "phpunit/phpunit": "^9.5",
-        "vimeo/psalm": "^4.22",
-        "phpstan/phpstan": "^1.5",
+        "vimeo/psalm": "^4.23",
+        "phpstan/phpstan": "^1.7",
         "friendsofphp/php-cs-fixer": "^3.8",
         "symfony/var-dumper": "^5.4"
     },
