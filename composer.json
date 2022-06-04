@@ -23,7 +23,7 @@
         "php": ">=7.4",
         "ext-json": "*",
         "symfony/console": "^5.4",
-        "gacela-project/gacela": "^0.19"
+        "gacela-project/gacela": "^0.21"
     },
     "require-dev": {
         "roave/security-advisories": "dev-latest",
